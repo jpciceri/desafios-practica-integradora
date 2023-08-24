@@ -1,5 +1,5 @@
 import { Router } from "express";
-import ProductManager from "../managers/productmanager.js";
+import ProductManager from "../dao/managers/productmanager.js";
 import  __dirname  from "../utils.js";
 
 
@@ -14,6 +14,10 @@ router.get("/", async(req,res)=>{
 
 router.get("/realtimeProducts", (req,res)=>{
     res.render("realtimeProducts");
+});
+
+router.get("/chat", (req, res) => {
+    res.render("chat");
 });
 
 export default router;

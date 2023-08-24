@@ -1,10 +1,12 @@
 import express from "express";
-import viewRouter from "./rutas/view.router.js";
-import cartRouter from "./rutas/carts.router.js";
-import productsRouter from "./rutas/products.router.js";
+import viewRouter from "../src/rutas/view.router.js";
+import cartsRouter from "../src/rutas/carts.router.js";
+import productsRouter from "../src/rutas/products.router.js";
 import  __dirname  from "./utils.js";
 import handlebars from "express-handlebars";
 import { Server, Socket } from "socket.io";
+import mongoose from "mongoose";
+import ChatManager from "./dao/managers/ChatManager.js";
 
 const app = express();
 const puerto =8080;
@@ -19,9 +21,11 @@ app.engine("handlebars", handlebars.engine());
 app.set("view engine","handlebars");
 app.set("views", __dirname+"/views")
 
-app.use("/api", cartRouter);
+app.use("/api", cartsRouter);
 app.use("/api", productsRouter);
 app.use("/", viewRouter);
+
+mongoose.connect("mongodb+srv://juanpc87:juan123@codercluster.xxnkdzq.mongodb.net/ecommerce?retryWrites=true&w=majority")
 
 
 const httpServer=app.listen(puerto, () => {
@@ -30,8 +34,9 @@ const httpServer=app.listen(puerto, () => {
 
 const socketServer = new Server(httpServer);
 
-import ProductManager from "./managers/productmanager.js";
+import ProductManager from "./dao/managers/productmanager.js";
 const PM = new ProductManager(__dirname+"/files/products.json");
+const CM = new ChatManager();
 
 socketServer.on("connection", async (socket)=>{
     console.log("Cliente conectado con ID: ", socket.id);
@@ -50,4 +55,11 @@ socketServer.on("connection", async (socket)=>{
         const listadeproductos=await PM.getProducts({})
         socketServer.emit("envioDeProducts",listadeproductos)
         })
+
+        socket.on("newMessage", async (id) => {
+            CM.createMessage(id);
+            const messages = await CM.getMessages();
+            socket.emit("messages", messages);
+        });
+
 });
