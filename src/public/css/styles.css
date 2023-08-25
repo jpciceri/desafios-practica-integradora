@@ -26,7 +26,7 @@
     align-items: stretch;
     
   }
-  .container {
+  #container1 {
     position: relative;
     background-color: azure;
     border: #000;
@@ -34,6 +34,12 @@
     margin: 3px
   } 
   
+  .chat1{
+    background-color: rgb(128, 153, 209);
+    margin-left: 443px;
+    padding: 33px;
+
+  }
   
   #formProduct {
     width: 400px;
@@ -115,4 +121,17 @@
 	gap: 10px;
 	width: 500px;
 	word-wrap: break-word;
+}
+#listMessages {
+  background-color: azure;
+	margin-top: 100px;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	width: 500px;
+	word-wrap: break-word;
+}
+
+.send {
+	margin-bottom: 100px;
 }
